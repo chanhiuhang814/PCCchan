@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hydro Guardian Anime Adventure: Clean Water & HK Wastewater Quest!</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for cute, highly legible primary-school anime styling -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --font-main: 'Inter', sans-serif;
+            --font-heading: 'Fredoka', cursive, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f766e 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            touch-action: manipulation;
+            font-size: 19px; /* Large baseline font size for primary students */
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: var(--font-heading);
+            letter-spacing: 0.03em;
+        }
+
+        /* Responsive text utility scaling */
+        .text-body-lg { font-size: 1.25rem; line-height: 1.75rem; } /* 20px */
+        .text-body-xl { font-size: 1.375rem; line-height: 1.875rem; } /* 22px */
+        .text-heading-lg { font-size: 2rem; line-height: 2.25rem; } /* 32px */
+        .text-heading-xl { font-size: 2.5rem; line-height: 2.75rem; } /* 40px */
+
+        .anime-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border: 3px solid rgba(56, 189, 248, 0.4);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5), 0 0 20px rgba(56, 189, 248, 0.2);
+            border-radius: 1.5rem;
+        }
+
+        .anime-btn {
+            font-family: var(--font-heading);
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 6px 0 0 rgba(0, 0, 0, 0.3), 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+
+        .anime-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 9px 0 0 rgba(0, 0, 0, 0.3), 0 0 25px rgba(56, 189, 248, 0.7);
+        }
+
+        .anime-btn:active {
+            transform: translateY(2px) scale(0.98);
+            box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .pulsing-btn {
+            animation: pulseGlow 1.8s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1); box-shadow: 0 0 15px rgba(34, 197, 94, 0.5); }
+            100% { transform: scale(1.06); box-shadow: 0 0 30px rgba(34, 197, 94, 0.9), 0 0 40px rgba(56, 189, 248, 0.6); }
+        }
+
+        /* HK Wastewater Flow Diagram Node Styles */
+        .process-node {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .process-node:hover {
+            transform: translateY(-6px) scale(1.03);
+        }
+
+        .node-completed {
+            border-color: #22c55e !important;
+            background: rgba(20, 83, 45, 0.85) !important;
+        }
+
+        .node-active {
+            border-color: #38bdf8 !important;
+            animation: nodePulse 1.5s infinite;
+        }
+
+        @keyframes nodePulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(56, 189, 248, 0.9), 0 0 15px rgba(234, 179, 8, 0.8); }
+        }
+
+        /* Flow pipeline connector animation */
+        .pipe-flow {
+            stroke-dasharray: 12;
+            animation: dashFlow 1.2s linear infinite;
+        }
+
+        @keyframes dashFlow {
+            to { stroke-dashoffset: -24; }
+        }
+
+        /* Custom Modal Backdrop */
+        .modal-overlay {
+            background-color: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(8px);
+        }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #0284c7; border-radius: 5px; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #printable-certificate, #printable-certificate * { visibility: visible; }
+            #printable-certificate { position: absolute; left: 0; top: 0; width: 100%; }
+        }
+    </style>
+</head>
+<body class="p-2 md:p-6 text-slate-100 flex flex-col justify-between min-h-screen select-none">
+
+    <header class="max-w-6xl w-full mx-auto bg-slate-900/90 border-2 border-sky-500/50 rounded-2xl p-4 mb-4 shadow-xl backdrop-blur-md">
+        <div class="flex flex-wrap justify-between items-center gap-4">
+            <!-- Mascot Branding -->
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-2xl shadow-lg border-2 border-white/50 animate-bounce">
+                    🌊
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-cyan-300 via-sky-200 to-indigo-300 bg-clip-text text-transparent">
+                        Hydro Guardian Quest
+                    </h1>
+                    <p class="text-sm md:text-base text-cyan-200 font-medium">
+                        Hong Kong Water & Wastewater Adventure
+                    </p>
+                </div>
+            </div>
+
+            <!-- Stats & Navigation Controls -->
+            <div class="flex items-center gap-3 md:gap-6 flex-wrap">
+                <div class="bg-slate-800/90 border border-amber-400/50 px-4 py-2 rounded-xl flex items-center gap-2 shadow-inner">
+                    <span class="text-2xl">⭐</span>
+                    <span id="total-stars-display" class="font-heading text-2xl text-amber-300 font-bold">0 / 12</span>
+                </div>
+                <div class="bg-slate-800/90 border border-cyan-400/50 px-4 py-2 rounded-xl flex items-center gap-2 shadow-inner">
+                    <span class="text-2xl">💎</span>
+                    <span id="crystals-display" class="font-heading text-2xl text-cyan-300 font-bold">0</span>
+                </div>
+
+                <button id="map-btn" onclick="showStageMap()" class="anime-btn bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-lg font-bold px-4 py-2 rounded-xl flex items-center gap-2">
+                    🗺️ <span class="hidden sm:inline">Stage Map</span>
+                </button>
+
+                <button id="sound-toggle-btn" onclick="toggleAudio()" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/50 p-2.5 rounded-xl text-xl transition-all">
+                    🔊
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl w-full mx-auto flex-1 flex flex-col justify-center my-2">
+
+        <!-- ================= STAGE SELECTION MAP ================= -->
+        <section id="stage-map-screen" class="space-y-6">
+            <div class="anime-card p-6 md:p-8 text-center space-y-4">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-cyan-300 drop-shadow-md">
+                    🌟 Select Your Hydro Quest Stage 🌟
+                </h2>
+                <p class="text-xl md:text-2xl text-slate-200 max-w-3xl mx-auto">
+                    Join Aqua-Chan and Mizu-Boy! Protect Hong Kong's rivers, master the wastewater treatment process, and save Victoria Harbour!
+                </p>
+
+                <!-- Stage Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                    
+                    <!-- Stage 1 Card -->
+                    <div id="stage-card-1" class="anime-card p-6 flex flex-col justify-between border-2 border-emerald-400/60 bg-slate-900/90 hover:border-emerald-300 transition-all">
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="bg-emerald-500/20 text-emerald-300 text-base font-bold px-3 py-1 rounded-full border border-emerald-500/40">Stage 1</span>
+                                <div id="s1-stars" class="text-xl text-amber-400">⭐⭐⭐</div>
+                            </div>
+                            <h3 class="text-2xl md:text-3xl font-bold text-emerald-300 text-left">🌊 Freeze & Learn: River Defender</h3>
+                            <p class="text-slate-200 text-lg md:text-xl text-left leading-relaxed">
+                                Clear pollution from Hong Kong's streams! Tap falling trash to <strong>freeze time</strong> and discover pollutant causes!
+                            </p>
+                        </div>
+                        <button onclick="startStage(1)" class="anime-btn w-full mt-6 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-extrabold text-xl py-3 rounded-xl shadow-lg">
+                            Play Stage 1 ➡️
+                        </button>
+                    </div>
+
+                    <!-- Stage 2 Card -->
+                    <div id="stage-card-2" class="anime-card p-6 flex flex-col justify-between border-2 border-cyan-400/60 bg-slate-900/90 hover:border-cyan-300 transition-all">
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="bg-cyan-500/20 text-cyan-300 text-base font-bold px-3 py-1 rounded-full border border-cyan-500/40">Stage 2</span>
+                                <div id="s2-stars" class="text-xl text-amber-400">⭐⭐⭐</div>
+                            </div>
+                            <h3 class="text-2xl md:text-3xl font-bold text-cyan-300 text-left">🧪 Filtration Alchemy Lab</h3>
+                            <p class="text-slate-200 text-lg md:text-xl text-left leading-relaxed">
+                                Build a natural multi-layer filter column using gravel, sand, charcoal, and filter paper to purify muddy water!
+                            </p>
+                        </div>
+                        <button onclick="startStage(2)" class="anime-btn w-full mt-6 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold text-xl py-3 rounded-xl shadow-lg">
+                            Play Stage 2 ➡️
+                        </button>
+                    </div>
+
+                    <!-- Stage 3 Card -->
+                    <div id="stage-card-3" class="anime-card p-6 flex flex-col justify-between border-2 border-indigo-400/60 bg-slate-900/90 hover:border-indigo-300 transition-all">
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="bg-indigo-500/20 text-indigo-300 text-base font-bold px-3 py-1 rounded-full border border-indigo-500/40">Stage 3</span>
+                                <div id="s3-stars" class="text-xl text-amber-400">⭐⭐⭐</div>
+                            </div>
+                            <h3 class="text-2xl md:text-3xl font-bold text-indigo-300 text-left">🏭 HK Wastewater Process Explorer</h3>
+                            <p class="text-slate-200 text-lg md:text-xl text-left leading-relaxed">
+                                Explore Hong Kong's 5 major wastewater treatment processes (Stonecutters Island CAPT, Sha Tin Aeration, T·PARK sludge, etc.) to earn 3 Stars!
+                            </p>
+                        </div>
+                        <button onclick="startStage(3)" class="anime-btn w-full mt-6 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white font-extrabold text-xl py-3 rounded-xl shadow-lg">
+                            Play Stage 3 ➡️
+                        </button>
+                    </div>
+
+                    <!-- Stage 4 Card -->
+                    <div id="stage-card-4" class="anime-card p-6 flex flex-col justify-between border-2 border-purple-400/60 bg-slate-900/90 hover:border-purple-300 transition-all">
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="bg-purple-500/20 text-purple-300 text-base font-bold px-3 py-1 rounded-full border border-purple-500/40">Stage 4</span>
+                                <div id="s4-stars" class="text-xl text-amber-400">⭐⭐⭐</div>
+                            </div>
+                            <h3 class="text-2xl md:text-3xl font-bold text-purple-300 text-left">👾 Kraken Boss & Eco-Quiz</h3>
+                            <p class="text-slate-200 text-lg md:text-xl text-left leading-relaxed">
+                                Defeat the Dark Sludge Kraken in Victoria Harbour using Hydro-Blasts powered by eco-knowledge to win your Engineer Certificate!
+                            </p>
+                        </div>
+                        <button onclick="startStage(4)" class="anime-btn w-full mt-6 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-extrabold text-xl py-3 rounded-xl shadow-lg">
+                            Play Stage 4 ➡️
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= STAGE 1: RIVER DEFENDER ================= -->
+        <section id="stage-1-screen" class="hidden space-y-4">
+            <div class="anime-card p-4 md:p-6">
+                <!-- Header Info -->
+                <div class="flex flex-wrap justify-between items-center gap-3 mb-3 border-b border-slate-700/80 pb-3">
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-extrabold text-emerald-300">Stage 1: River Defender</h2>
+                        <p class="text-slate-200 text-lg md:text-xl">Tap floating trash! <strong>Freezes falling trash in mid-air</strong> to learn pollutant facts!</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="bg-slate-800 border border-emerald-500/50 px-4 py-2 rounded-xl text-emerald-300 font-bold text-xl">
+                            Target Cleaned: <span id="s1-score" class="text-amber-300 text-2xl">0 / 6</span>
+                        </div>
+                        <div class="bg-slate-800 border border-sky-500/50 px-4 py-2 rounded-xl text-sky-300 font-bold text-xl">
+                            Time: <span id="s1-timer" class="text-white text-2xl">30s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Canvas Game Area -->
+                <div class="relative w-full h-[400px] md:h-[480px] bg-slate-950 rounded-2xl overflow-hidden border-2 border-emerald-500/40 shadow-inner">
+                    <canvas id="s1-canvas" class="w-full h-full cursor-pointer"></canvas>
+
+                    <!-- Mascot Helper Banner -->
+                    <div class="absolute bottom-3 left-3 right-3 bg-slate-900/90 border border-cyan-400/50 rounded-xl p-3 flex items-center gap-3 backdrop-blur-md">
+                        <div class="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center text-xl shrink-0">
+                            👩‍🔬
+                        </div>
+                        <p class="text-cyan-100 text-base md:text-lg font-medium">
+                            <strong>Aqua-Chan:</strong> "Tap any trash item floating in the river! Time will freeze while you learn about it!"
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= STAGE 2: FILTRATION LAB ================= -->
+        <section id="stage-2-screen" class="hidden space-y-4">
+            <div class="anime-card p-4 md:p-6 space-y-4">
+                <div class="flex flex-wrap justify-between items-center border-b border-slate-700 pb-3">
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-extrabold text-cyan-300">Stage 2: Filtration Alchemy Lab</h2>
+                        <p class="text-slate-200 text-lg md:text-xl">Tap layers in correct sequence from top filter inlet down to fine mesh!</p>
+                    </div>
+                    <div class="text-cyan-300 text-xl font-bold bg-slate-800 px-4 py-2 rounded-xl border border-cyan-500/40">
+                        Layers Stacked: <span id="s2-layer-count" class="text-amber-300 text-2xl">0 / 4</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <!-- Layer Buttons Selection -->
+                    <div class="space-y-3">
+                        <p class="text-xl font-bold text-slate-200">Select filter media in order:</p>
+                        
+                        <button onclick="addFilterLayer('gravel')" id="btn-layer-gravel" class="anime-btn w-full p-4 rounded-xl bg-amber-900/80 border-2 border-amber-500 text-amber-200 text-xl font-bold flex items-center justify-between">
+                            <span>🪨 1. Coarse Gravel (Catches large leaves & twigs)</span>
+                            <span class="text-2xl">➕</span>
+                        </button>
+                        <button onclick="addFilterLayer('sand')" id="btn-layer-sand" class="anime-btn w-full p-4 rounded-xl bg-yellow-900/80 border-2 border-yellow-500 text-yellow-200 text-xl font-bold flex items-center justify-between">
+                            <span>🏖️ 2. Fine Sand (Traps smaller floating silt & dirt)</span>
+                            <span class="text-2xl">➕</span>
+                        </button>
+                        <button onclick="addFilterLayer('charcoal')" id="btn-layer-charcoal" class="anime-btn w-full p-4 rounded-xl bg-slate-800 border-2 border-slate-500 text-slate-200 text-xl font-bold flex items-center justify-between">
+                            <span>🌑 3. Activated Charcoal (Absorbs odors & chemicals)</span>
+                            <span class="text-2xl">➕</span>
+                        </button>
+                        <button onclick="addFilterLayer('paper')" id="btn-layer-paper" class="anime-btn w-full p-4 rounded-xl bg-blue-900/80 border-2 border-blue-400 text-blue-200 text-xl font-bold flex items-center justify-between">
+                            <span>📄 4. Fine Filter Paper (Stops micro particle pass-through)</span>
+                            <span class="text-2xl">➕</span>
+                        </button>
+
+                        <div class="flex gap-3 pt-2">
+                            <button onclick="resetFiltrationLab()" class="anime-btn bg-slate-700 text-slate-200 text-lg px-4 py-2 rounded-xl border border-slate-500">
+                                🔄 Reset Stack
+                            </button>
+                            <button id="s2-pour-btn" onclick="testFiltrationColumn()" disabled class="anime-btn flex-1 bg-slate-700 opacity-50 text-slate-400 font-extrabold text-xl py-3 rounded-xl border border-slate-600">
+                                💧 Pour Muddy Water!
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Column Preview Canvas -->
+                    <div class="bg-slate-950 border-2 border-cyan-500/40 rounded-2xl p-4 flex flex-col items-center justify-center relative min-h-[380px]">
+                        <h4 class="text-cyan-300 font-bold text-xl mb-2">Filtration Column Chamber</h4>
+                        <canvas id="s2-canvas" width="280" height="320" class="border border-slate-800 rounded-xl bg-slate-900/60"></canvas>
+                        <p id="s2-status-text" class="text-center text-slate-300 text-lg mt-3 font-medium">
+                            Stack all 4 components then tap "Pour Muddy Water"!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= STAGE 3: HONG KONG WASTEWATER PROCESS EXPLORER ================= -->
+        <section id="stage-3-screen" class="hidden space-y-4">
+            <div class="anime-card p-4 md:p-6 space-y-4">
+                <!-- Header -->
+                <div class="flex flex-wrap justify-between items-center border-b border-slate-700/80 pb-3 gap-3">
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-extrabold text-indigo-300">
+                            Stage 3: Hong Kong Wastewater Treatment Process Graph
+                        </h2>
+                        <p class="text-slate-200 text-lg md:text-xl">
+                            Tap each Hong Kong facility process box to watch the interactive explanation diagram!
+                        </p>
+                    </div>
+                    
+                    <!-- Progress Counter -->
+                    <div class="bg-slate-800/90 border-2 border-indigo-400/60 px-5 py-2.5 rounded-2xl flex items-center gap-3 shadow-lg">
+                        <span class="text-2xl">📋</span>
+                        <div>
+                            <div class="text-xs text-indigo-300 font-bold uppercase tracking-wider">Exploration Tracker</div>
+                            <div class="text-2xl font-extrabold text-amber-300 font-heading">
+                                Processes Explored: <span id="s3-explored-count" class="text-cyan-300">0</span> / 5
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Process Flow Pipeline Map Visual -->
+                <div class="bg-slate-950/90 border-2 border-indigo-500/40 rounded-2xl p-4 md:p-6 space-y-6 relative overflow-x-auto">
+                    
+                    <div class="text-center mb-2">
+                        <span class="bg-indigo-900/60 border border-indigo-400/40 text-indigo-200 px-4 py-1.5 rounded-full text-lg font-bold">
+                            🇭🇰 Hong Kong Drainage Services Department (DSD) Sewage Treatment Flow
+                        </span>
+                    </div>
+
+                    <!-- Flow Nodes Grid Container -->
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 min-w-[700px] relative">
+
+                        <!-- Node 1: Preliminary -->
+                        <div id="node-1" onclick="openProcessModal(1)" class="process-node anime-card p-4 border-2 border-sky-400/60 bg-slate-900 flex flex-col justify-between items-center text-center rounded-2xl hover:border-sky-300">
+                            <div class="w-14 h-14 rounded-full bg-sky-500/20 border-2 border-sky-400 flex items-center justify-center text-3xl mb-2">
+                                🗑️
+                            </div>
+                            <span id="badge-node-1" class="bg-slate-800 text-slate-300 text-xs px-2.5 py-1 rounded-full border border-slate-600 font-bold mb-2">Unwatched ⭕</span>
+                            <h4 class="text-sky-300 font-bold text-lg md:text-xl leading-tight">1. Preliminary Treatment</h4>
+                            <p class="text-slate-300 text-sm mt-2">Screening & Grit Removal at Pumping Stations</p>
+                        </div>
+
+                        <!-- Node 2: CAPT -->
+                        <div id="node-2" onclick="openProcessModal(2)" class="process-node anime-card p-4 border-2 border-cyan-400/60 bg-slate-900 flex flex-col justify-between items-center text-center rounded-2xl hover:border-cyan-300">
+                            <div class="w-14 h-14 rounded-full bg-cyan-500/20 border-2 border-cyan-400 flex items-center justify-center text-3xl mb-2">
+                                🧪
+                            </div>
+                            <span id="badge-node-2" class="bg-slate-800 text-slate-300 text-xs px-2.5 py-1 rounded-full border border-slate-600 font-bold mb-2">Unwatched ⭕</span>
+                            <h4 class="text-cyan-300 font-bold text-lg md:text-xl leading-tight">2. CAPT Process</h4>
+                            <p class="text-slate-300 text-sm mt-2">Stonecutters Island Chemically Assisted Primary</p>
+                        </div>
+
+                        <!-- Node 3: Biological -->
+                        <div id="node-3" onclick="openProcessModal(3)" class="process-node anime-card p-4 border-2 border-teal-400/60 bg-slate-900 flex flex-col justify-between items-center text-center rounded-2xl hover:border-teal-300">
+                            <div class="w-14 h-14 rounded-full bg-teal-500/20 border-2 border-teal-400 flex items-center justify-center text-3xl mb-2">
+                                🦠
+                            </div>
+                            <span id="badge-node-3" class="bg-slate-800 text-slate-300 text-xs px-2.5 py-1 rounded-full border border-slate-600 font-bold mb-2">Unwatched ⭕</span>
+                            <h4 class="text-teal-300 font-bold text-lg md:text-xl leading-tight">3. Secondary Aeration</h4>
+                            <p class="text-slate-300 text-sm mt-2">Sha Tin & Tai Po Microbe Biological Treatment</p>
+                        </div>
+
+                        <!-- Node 4: Clarification & Sludge -->
+                        <div id="node-4" onclick="openProcessModal(4)" class="process-node anime-card p-4 border-2 border-amber-400/60 bg-slate-900 flex flex-col justify-between items-center text-center rounded-2xl hover:border-amber-300">
+                            <div class="w-14 h-14 rounded-full bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-3xl mb-2">
+                                ⚡
+                            </div>
+                            <span id="badge-node-4" class="bg-slate-800 text-slate-300 text-xs px-2.5 py-1 rounded-full border border-slate-600 font-bold mb-2">Unwatched ⭕</span>
+                            <h4 class="text-amber-300 font-bold text-lg md:text-xl leading-tight">4. Sludge & T·PARK</h4>
+                            <p class="text-slate-300 text-sm mt-2">Clarification Tank & Energy Recovery</p>
+                        </div>
+
+                        <!-- Node 5: Disinfection & Outfall -->
+                        <div id="node-5" onclick="openProcessModal(5)" class="process-node anime-card p-4 border-2 border-blue-400/60 bg-slate-900 flex flex-col justify-between items-center text-center rounded-2xl hover:border-blue-300">
+                            <div class="w-14 h-14 rounded-full bg-blue-500/20 border-2 border-blue-400 flex items-center justify-center text-3xl mb-2">
+                                ☀️
+                            </div>
+                            <span id="badge-node-5" class="bg-slate-800 text-slate-300 text-xs px-2.5 py-1 rounded-full border border-slate-600 font-bold mb-2">Unwatched ⭕</span>
+                            <h4 class="text-blue-300 font-bold text-lg md:text-xl leading-tight">5. UV Disinfection</h4>
+                            <p class="text-slate-300 text-sm mt-2">Clean Discharge to Victoria Harbour Outfall</p>
+                        </div>
+
+                    </div>
+
+                    <!-- Flow Animation Hint Banner -->
+                    <div id="s3-completion-banner" class="bg-indigo-900/50 border border-indigo-400/40 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl">💡</span>
+                            <p id="s3-hint-text" class="text-indigo-200 text-lg md:text-xl font-medium">
+                                Tap on process boxes to view their visual diagrams and explanations! Watch all 5 to earn 3 Stars!
+                            </p>
+                        </div>
+                        <button id="s3-next-stage-btn" onclick="startStage(4)" class="hidden pulsing-btn anime-btn bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white font-extrabold text-2xl px-6 py-3 rounded-xl shadow-xl">
+                            Next Stage ➡️
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= STAGE 4: KRAKEN BOSS & QUIZ ================= -->
+        <section id="stage-4-screen" class="hidden space-y-4">
+            <div class="anime-card p-4 md:p-6 space-y-4">
+                <div class="flex flex-wrap justify-between items-center border-b border-slate-700/80 pb-3">
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-extrabold text-purple-300">Stage 4: Dark Sludge Kraken Boss</h2>
+                        <p class="text-slate-200 text-lg md:text-xl">Answer eco-questions correctly to blast clean hydro-energy at the Kraken!</p>
+                    </div>
+                    <div class="bg-slate-800 border border-purple-500/50 px-4 py-2 rounded-xl text-purple-300 font-bold text-xl">
+                        Kraken HP: <span id="boss-hp-text" class="text-pink-400 text-2xl">100%</span>
+                    </div>
+                </div>
+
+                <!-- Boss Battle Visual Area -->
+                <div class="bg-slate-950 border-2 border-purple-500/40 rounded-2xl p-6 text-center space-y-4 relative overflow-hidden">
+                    <!-- Boss Graphic -->
+                    <div class="relative inline-block">
+                        <div id="kraken-sprite" class="text-8xl md:text-9xl transition-all duration-300 filter drop-shadow-[0_0_20px_rgba(168,85,247,0.7)]">
+                            🐙
+                        </div>
+                        <div class="w-48 h-4 bg-slate-800 rounded-full border border-purple-400/50 mx-auto mt-2 overflow-hidden">
+                            <div id="boss-hp-bar" class="h-full bg-gradient-to-r from-pink-500 to-purple-500 w-full transition-all duration-500"></div>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Question Card -->
+                    <div class="bg-slate-900/90 border border-cyan-400/40 rounded-2xl p-5 text-left space-y-4">
+                        <span class="text-cyan-300 font-bold text-base uppercase tracking-wide">Question <span id="quiz-num">1</span> of 3</span>
+                        <h3 id="quiz-question" class="text-2xl md:text-3xl font-bold text-white leading-relaxed">
+                            Loading quiz question...
+                        </h3>
+
+                        <!-- Options Buttons Grid -->
+                        <div id="quiz-options" class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- ================= STAGE 1 FREEZE & LEARN MODAL ================= -->
+    <div id="s1-learn-modal" class="hidden fixed inset-0 modal-overlay flex items-center justify-center p-4 z-50">
+        <div class="anime-card max-w-2xl w-full p-6 md:p-8 space-y-6 border-2 border-emerald-400 text-left bg-slate-900 shadow-2xl">
+            <div class="flex items-center gap-4 border-b border-slate-700 pb-4">
+                <div id="s1-modal-icon" class="text-5xl md:text-6xl p-3 bg-slate-800 rounded-2xl border border-emerald-400/50">
+                    🍾
+                </div>
+                <div>
+                    <span class="bg-emerald-500/20 text-emerald-300 text-sm font-bold px-3 py-1 rounded-full border border-emerald-500/40 uppercase">
+                        Pollutant Discovered!
+                    </span>
+                    <h3 id="s1-modal-title" class="text-2xl md:text-3xl font-extrabold text-white mt-1">
+                        Plastic Water Bottle
+                    </h3>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <p id="s1-modal-desc" class="text-slate-100 text-xl md:text-2xl leading-relaxed font-medium">
+                    Plastic bottles take over 450 years to decompose in Hong Kong's marine environment, breaking down into harmful microplastics!
+                </p>
+                <div class="bg-slate-800/80 border border-cyan-400/40 p-4 rounded-xl flex items-center gap-3">
+                    <span class="text-3xl">💡</span>
+                    <p id="s1-modal-tip" class="text-cyan-200 text-lg md:text-xl font-semibold">
+                        Action: Always bring reusable water bottles when hiking near Hong Kong reservoirs!
+                    </p>
+                </div>
+            </div>
+
+            <button onclick="resumeStage1()" class="anime-btn w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-extrabold text-2xl py-4 rounded-xl shadow-xl">
+                Got it! 🌊
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= STAGE 3 PROCESS DIAGRAM MODAL ================= -->
+    <div id="s3-process-modal" class="hidden fixed inset-0 modal-overlay flex items-center justify-center p-4 z-50">
+        <div class="anime-card max-w-3xl w-full p-6 md:p-8 space-y-6 border-2 border-indigo-400 text-left bg-slate-900 shadow-2xl max-h-[90vh] overflow-y-auto">
+            
+            <div class="flex justify-between items-start border-b border-slate-700 pb-4">
+                <div class="flex items-center gap-4">
+                    <div id="s3-modal-icon" class="text-5xl md:text-6xl p-3 bg-indigo-950 rounded-2xl border border-indigo-400/50">
+                        🧪
+                    </div>
+                    <div>
+                        <span id="s3-modal-step" class="bg-indigo-500/20 text-indigo-300 text-base font-bold px-3 py-1 rounded-full border border-indigo-500/40">
+                            HK Process Step 1
+                        </span>
+                        <h3 id="s3-modal-title" class="text-2xl md:text-3xl font-extrabold text-indigo-200 mt-1">
+                            Process Name
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Graph Illustration Area -->
+            <div id="s3-modal-visual" class="bg-slate-950 border border-indigo-500/40 rounded-2xl p-6 text-center space-y-3 min-h-[160px] flex flex-col justify-center items-center">
+                <!-- Dynamically populated SVG / Animation diagram -->
+            </div>
+
+            <!-- Explanatory Text Box -->
+            <div class="space-y-4">
+                <div class="bg-slate-800/90 border border-indigo-400/30 p-5 rounded-2xl space-y-2">
+                    <h4 class="text-xl font-bold text-cyan-300">How it Works in Hong Kong:</h4>
+                    <p id="s3-modal-desc" class="text-slate-100 text-xl md:text-2xl leading-relaxed">
+                        Explanation details...
+                    </p>
+                </div>
+
+                <!-- Mascot Commentary -->
+                <div class="bg-indigo-950/60 border border-indigo-500/40 p-4 rounded-xl flex items-center gap-3">
+                    <span class="text-3xl">👦</span>
+                    <p id="s3-modal-mascot" class="text-indigo-200 text-lg md:text-xl font-medium">
+                        <strong>Mizu-Boy:</strong> "This keeps our coastal waters clean!"
+                    </p>
+                </div>
+            </div>
+
+            <button onclick="closeProcessModal()" class="anime-btn w-full bg-gradient-to-r from-indigo-500 via-sky-500 to-blue-600 text-white font-extrabold text-2xl py-4 rounded-xl shadow-xl">
+                Understood! 🌊
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= STAGE VICTORY MODAL WITH EXPLICIT NEXT BUTTON ================= -->
+    <div id="victory-modal" class="hidden fixed inset-0 modal-overlay flex items-center justify-center p-4 z-50">
+        <div class="anime-card max-w-xl w-full p-6 md:p-8 space-y-6 text-center bg-slate-900 border-2 border-amber-400 shadow-2xl">
+            <div class="text-6xl md:text-7xl animate-bounce">
+                🎉
+            </div>
+            <h3 id="victory-title" class="text-3xl md:text-4xl font-extrabold text-amber-300">
+                Stage Complete!
+            </h3>
+
+            <div id="victory-stars" class="text-5xl text-amber-400 py-2">
+                ⭐⭐⭐
+            </div>
+
+            <p id="victory-desc" class="text-slate-100 text-xl md:text-2xl leading-relaxed">
+                Awesome work, Hydro Guardian! You've mastered this clean water challenge!
+            </p>
+
+            <div class="space-y-3 pt-2">
+                <!-- Prominent Animated Next Stage Button -->
+                <button id="victory-next-btn" onclick="proceedToNextStage()" class="pulsing-btn anime-btn w-full bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white font-extrabold text-2xl py-4 rounded-xl shadow-2xl">
+                    Next Stage ➡️
+                </button>
+
+                <button onclick="showStageMap()" class="anime-btn w-full bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold text-xl py-3 rounded-xl border border-cyan-500/40">
+                    🗺️ Return to Stage Map
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= FINAL CERTIFICATE MODAL ================= -->
+    <div id="certificate-modal" class="hidden fixed inset-0 modal-overlay flex items-center justify-center p-4 z-50 overflow-y-auto">
+        <div class="anime-card max-w-3xl w-full p-6 md:p-8 space-y-6 text-center bg-slate-900 border-2 border-cyan-400 shadow-2xl my-8">
+            <h3 class="text-3xl md:text-4xl font-extrabold text-cyan-300">
+                🏆 Hydro Quest Champion!
+            </h3>
+
+            <!-- Printable Certificate Document Frame -->
+            <div id="printable-certificate" class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 border-8 border-amber-400/80 rounded-3xl p-6 md:p-8 space-y-4 shadow-2xl text-slate-100">
+                <div class="flex justify-between items-center border-b-2 border-amber-400/40 pb-4">
+                    <span class="text-3xl">🇭🇰</span>
+                    <span class="text-amber-300 font-heading text-xl md:text-2xl font-bold uppercase tracking-widest">Certificate of Excellence</span>
+                    <span class="text-3xl">🌊</span>
+                </div>
+
+                <div class="space-y-2 py-4">
+                    <p class="text-slate-300 text-lg md:text-xl uppercase tracking-wider">This certifies that</p>
+                    
+                    <input id="student-name-input" type="text" placeholder="Enter Your Name Here" class="bg-slate-800 border-2 border-cyan-400 text-center text-2xl md:text-3xl font-extrabold text-cyan-200 rounded-xl px-4 py-2 w-full max-w-md focus:outline-none focus:border-amber-400">
+
+                    <p class="text-slate-200 text-xl md:text-2xl pt-2">
+                        has successfully completed all 4 stages of the
+                    </p>
+                    <h4 class="text-2xl md:text-3xl font-extrabold text-amber-300 font-heading">
+                        Hydro Guardian Hong Kong Clean Water Quest
+                    </h4>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 pt-4 border-t-2 border-amber-400/40 text-left">
+                    <div>
+                        <div class="text-sm text-slate-400">Stars Earned:</div>
+                        <div id="cert-stars" class="text-2xl text-amber-300 font-bold">12 / 12 ⭐</div>
+                    </div>
+                    <div>
+                        <div class="text-sm text-slate-400">Specialization:</div>
+                        <div class="text-xl text-cyan-300 font-bold">HK Wastewater Master</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap gap-4 pt-2">
+                <button onclick="window.print()" class="anime-btn flex-1 bg-gradient-to-r from-amber-500 to-yellow-600 text-slate-950 font-extrabold text-xl py-3 rounded-xl shadow-lg">
+                    🖨️ Print Certificate
+                </button>
+                <button onclick="showStageMap()" class="anime-btn flex-1 bg-slate-800 text-cyan-300 font-bold text-xl py-3 rounded-xl border border-cyan-500/40">
+                    🗺️ Back to Stage Map
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* State Variables */
+        let gameState = {
+            stars: [0, 0, 0, 0], // Stage 1..4 stars
+            crystals: 0,
+            currentStage: 1,
+            audioMuted: false
+        };
+
+        /* WEB AUDIO SYNTHESIZER */
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSound(type) {
+            if (gameState.audioMuted) return;
+            initAudio();
+            if (!audioCtx) return;
+
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'click') {
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(800, now + 0.08);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.08);
+                osc.start(now);
+                osc.stop(now + 0.08);
+            } else if (type === 'freeze') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.exponentialRampToValueAtTime(200, now + 0.3);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else if (type === 'star') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, now); // C5
+                osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.5);
+                osc.start(now);
+                osc.stop(now + 0.5);
+            } else if (type === 'splash') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.linearRampToValueAtTime(150, now + 0.2);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.2);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            }
+        }
+
+        function toggleAudio() {
+            gameState.audioMuted = !gameState.audioMuted;
+            document.getElementById('sound-toggle-btn').innerText = gameState.audioMuted ? '🔇' : '🔊';
+        }
+
+        /* NAVIGATION CONTROL */
+        function hideAllScreens() {
+            document.getElementById('stage-map-screen').classList.add('hidden');
+            document.getElementById('stage-1-screen').classList.add('hidden');
+            document.getElementById('stage-2-screen').classList.add('hidden');
+            document.getElementById('stage-3-screen').classList.add('hidden');
+            document.getElementById('stage-4-screen').classList.add('hidden');
+            document.getElementById('victory-modal').classList.add('hidden');
+            document.getElementById('s1-learn-modal').classList.add('hidden');
+            document.getElementById('s3-process-modal').classList.add('hidden');
+            document.getElementById('certificate-modal').classList.add('hidden');
+        }
+
+        function showStageMap() {
+            hideAllScreens();
+            document.getElementById('stage-map-screen').classList.remove('hidden');
+            updateStatsUI();
+            playSound('click');
+        }
+
+        function updateStatsUI() {
+            const total = gameState.stars.reduce((a, b) => a + b, 0);
+            document.getElementById('total-stars-display').innerText = `${total} / 12`;
+            document.getElementById('crystals-display').innerText = gameState.crystals;
+
+            for (let i = 1; i <= 4; i++) {
+                const s = gameState.stars[i - 1];
+                let starStr = '';
+                for (let k = 0; k < s; k++) starStr += '⭐';
+                for (let k = s; k < 3; k++) starStr += '☆';
+                document.getElementById(`s${i}-stars`).innerText = starStr;
+            }
+        }
+
+        function startStage(stageNum) {
+            gameState.currentStage = stageNum;
+            hideAllScreens();
+            playSound('click');
+
+            if (stageNum === 1) {
+                document.getElementById('stage-1-screen').classList.remove('hidden');
+                initStage1();
+            } else if (stageNum === 2) {
+                document.getElementById('stage-2-screen').classList.remove('hidden');
+                initStage2();
+            } else if (stageNum === 3) {
+                document.getElementById('stage-3-screen').classList.remove('hidden');
+                initStage3();
+            } else if (stageNum === 4) {
+                document.getElementById('stage-4-screen').classList.remove('hidden');
+                initStage4();
+            }
+        }
+
+        function showVictoryModal(stageNum, starsCount, titleMsg) {
+            playSound('star');
+            confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+
+            gameState.stars[stageNum - 1] = Math.max(gameState.stars[stageNum - 1], starsCount);
+            gameState.crystals += starsCount * 50;
+            updateStatsUI();
+
+            document.getElementById('victory-title').innerText = titleMsg || `Stage ${stageNum} Complete!`;
+            let starStr = '';
+            for (let i = 0; i < starsCount; i++) starStr += '⭐';
+            document.getElementById('victory-stars').innerText = starStr;
+
+            const nextBtn = document.getElementById('victory-next-btn');
+            if (stageNum < 4) {
+                nextBtn.innerText = `Next Stage ${stageNum + 1} ➡️`;
+                nextBtn.onclick = () => { startStage(stageNum + 1); };
+            } else {
+                nextBtn.innerText = `View Certificate 📜`;
+                nextBtn.onclick = () => { showCertificateModal(); };
+            }
+
+            document.getElementById('victory-modal').classList.remove('hidden');
+        }
+
+        function proceedToNextStage() {
+            if (gameState.currentStage < 4) {
+                startStage(gameState.currentStage + 1);
+            } else {
+                showCertificateModal();
+            }
+        }
+
+        function showCertificateModal() {
+            hideAllScreens();
+            document.getElementById('cert-stars').innerText = `${gameState.stars.reduce((a,b)=>a+b,0)} / 12 ⭐`;
+            document.getElementById('certificate-modal').classList.remove('hidden');
+        }
+
+        /* ================= STAGE 1 LOGIC ================= */
+        let s1 = {
+            canvas: null,
+            ctx: null,
+            animId: null,
+            score: 0,
+            targetScore: 6,
+            timer: 30,
+            timerInterval: null,
+            isFrozen: false,
+            items: [],
+            activeItemIndex: -1
+        };
+
+        const pollutantDatabase = [
+            {
+                type: 'bottle',
+                icon: '🍾',
+                title: 'Plastic Bottle',
+                desc: 'Plastic bottles take over 450 years to break down in Hong Kong waters, releasing hazardous microplastics!',
+                tip: 'Tip: Always use reusable stainless steel water bottles!'
+            },
+            {
+                type: 'battery',
+                icon: '🔋',
+                title: 'Toxic Battery',
+                desc: 'Batteries contain heavy metals like mercury and lead that leak into streams and poison local river fish!',
+                tip: 'Tip: Recycle used batteries at HK collection boxes!'
+            },
+            {
+                type: 'drum',
+                icon: '🛢️',
+                title: 'Chemical Drum',
+                desc: 'Illegal industrial waste dumping suffocates river ecosystems and destroys clean freshwater sources.',
+                tip: 'Tip: Report stream pollution to HK EPD Hotline 2838 3111!'
+            },
+            {
+                type: 'takeout',
+                icon: '🍱',
+                title: 'Styrofoam Takeout Box',
+                desc: 'Styrofoam breaks into tiny floating foam beads that aquatic animals accidentally eat, harming marine food chains!',
+                tip: 'Tip: Bring your own food container when buying takeaway!'
+            }
+        ];
+
+        function initStage1() {
+            s1.canvas = document.getElementById('s1-canvas');
+            s1.ctx = s1.canvas.getContext('2d');
+            s1.score = 0;
+            s1.timer = 30;
+            s1.isFrozen = false;
+            s1.items = [];
+            document.getElementById('s1-score').innerText = `${s1.score} / ${s1.targetScore}`;
+            document.getElementById('s1-timer').innerText = `${s1.timer}s`;
+
+            // Resize canvas to element box dimensions
+            const rect = s1.canvas.getBoundingClientRect();
+            s1.canvas.width = rect.width;
+            s1.canvas.height = rect.height;
+
+            // Spawn initial trash items
+            for (let i = 0; i < 4; i++) {
+                spawnTrashItem();
+            }
+
+            // Click / Tap Handler
+            s1.canvas.onclick = handleStage1Click;
+
+            // Start Timer & Loop
+            if (s1.timerInterval) clearInterval(s1.timerInterval);
+            s1.timerInterval = setInterval(() => {
+                if (!s1.isFrozen) {
+                    s1.timer--;
+                    document.getElementById('s1-timer').innerText = `${s1.timer}s`;
+                    if (s1.timer <= 0) {
+                        clearInterval(s1.timerInterval);
+                        if (s1.score >= s1.targetScore) {
+                            showVictoryModal(1, 3, "Stage 1 Cleared!");
+                        } else {
+                            s1.timer = 20; // Give extra time if needed
+                            s1.timerInterval = setInterval(() => {}, 1000);
+                        }
+                    }
+                }
+            }, 1000);
+
+            if (s1.animId) cancelAnimationFrame(s1.animId);
+            runStage1Loop();
+        }
+
+        function spawnTrashItem() {
+            const template = pollutantDatabase[Math.floor(Math.random() * pollutantDatabase.length)];
+            s1.items.push({
+                x: Math.random() * (s1.canvas.width - 60) + 30,
+                y: -40 - Math.random() * 100,
+                speed: 1.2 + Math.random() * 1.5,
+                data: template,
+                radius: 35
+            });
+        }
+
+        function handleStage1Click(e) {
+            if (s1.isFrozen) return;
+
+            const rect = s1.canvas.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+
+            for (let i = 0; i < s1.items.length; i++) {
+                const item = s1.items[i];
+                const dist = Math.hypot(clickX - item.x, clickY - item.y);
+                if (dist <= item.radius + 15) {
+                    // FREEZE GAMEPLAY MID-AIR!
+                    s1.isFrozen = true;
+                    s1.activeItemIndex = i;
+                    playSound('freeze');
+
+                    // Populate Learn Modal with pollutant details
+                    document.getElementById('s1-modal-icon').innerText = item.data.icon;
+                    document.getElementById('s1-modal-title').innerText = item.data.title;
+                    document.getElementById('s1-modal-desc').innerText = item.data.desc;
+                    document.getElementById('s1-modal-tip').innerText = item.data.tip;
+                    document.getElementById('s1-learn-modal').classList.remove('hidden');
+                    break;
+                }
+            }
+        }
+
+        function resumeStage1() {
+            document.getElementById('s1-learn-modal').classList.add('hidden');
+            if (s1.activeItemIndex >= 0 && s1.activeItemIndex < s1.items.length) {
+                s1.items.splice(s1.activeItemIndex, 1);
+                s1.score++;
+                document.getElementById('s1-score').innerText = `${s1.score} / ${s1.targetScore}`;
+                playSound('splash');
+                spawnTrashItem();
+
+                if (s1.score >= s1.targetScore) {
+                    clearInterval(s1.timerInterval);
+                    showVictoryModal(1, 3, "Stage 1 Cleared ⭐⭐⭐");
+                    s1.isFrozen = true;
+                    return;
+                }
+            }
+            s1.activeItemIndex = -1;
+            s1.isFrozen = false;
+        }
+
+        function runStage1Loop() {
+            s1.ctx.clearRect(0, 0, s1.canvas.width, s1.canvas.height);
+
+            // Draw animated water river background
+            const time = Date.now() * 0.002;
+            s1.ctx.fillStyle = '#0f172a';
+            s1.ctx.fillRect(0, 0, s1.canvas.width, s1.canvas.height);
+
+            s1.ctx.fillStyle = 'rgba(14, 165, 233, 0.15)';
+            for (let i = 0; i < 5; i++) {
+                s1.ctx.beginPath();
+                s1.ctx.arc((i * 120 + time * 40) % s1.canvas.width, (i * 90) % s1.canvas.height, 40, 0, Math.PI * 2);
+                s1.ctx.fill();
+            }
+
+            // Draw Trash Items
+            for (let i = 0; i < s1.items.length; i++) {
+                const item = s1.items[i];
+
+                if (!s1.isFrozen) {
+                    item.y += item.speed;
+                    if (item.y > s1.canvas.height + 40) {
+                        item.y = -40;
+                        item.x = Math.random() * (s1.canvas.width - 60) + 30;
+                    }
+                }
+
+                // Draw Item Aura Ring
+                s1.ctx.beginPath();
+                s1.ctx.arc(item.x, item.y, item.radius, 0, Math.PI * 2);
+                s1.ctx.fillStyle = s1.isFrozen ? 'rgba(56, 189, 248, 0.4)' : 'rgba(239, 68, 68, 0.25)';
+                s1.ctx.strokeStyle = s1.isFrozen ? '#38bdf8' : '#f87171';
+                s1.ctx.lineWidth = 3;
+                s1.ctx.fill();
+                s1.ctx.stroke();
+
+                // Draw Emoji Icon
+                s1.ctx.font = '32px sans-serif';
+                s1.ctx.textAlign = 'center';
+                s1.ctx.textBaseline = 'middle';
+                s1.ctx.fillText(item.data.icon, item.x, item.y);
+            }
+
+            // Draw "TIME FROZEN" watermark if paused
+            if (s1.isFrozen) {
+                s1.ctx.fillStyle = 'rgba(56, 189, 248, 0.9)';
+                s1.ctx.font = 'bold 24px Fredoka';
+                s1.ctx.textAlign = 'center';
+                s1.ctx.fillText('❄️ TIME FROZEN - LEARN MODE ❄️', s1.canvas.width / 2, 40);
+            }
+
+            s1.animId = requestAnimationFrame(runStage1Loop);
+        }
+
+        /* ================= STAGE 2 LOGIC ================= */
+        let s2 = {
+            stacked: [],
+            required: ['gravel', 'sand', 'charcoal', 'paper'],
+            canvas: null,
+            ctx: null
+        };
+
+        function initStage2() {
+            s2.stacked = [];
+            s2.canvas = document.getElementById('s2-canvas');
+            s2.ctx = s2.canvas.getContext('2d');
+            document.getElementById('s2-layer-count').innerText = `0 / 4`;
+            document.getElementById('s2-pour-btn').disabled = true;
+            document.getElementById('s2-pour-btn').className = 'anime-btn flex-1 bg-slate-700 opacity-50 text-slate-400 font-extrabold text-xl py-3 rounded-xl border border-slate-600';
+            drawStage2Column();
+        }
+
+        function addFilterLayer(layerType) {
+            if (s2.stacked.includes(layerType)) return;
+            s2.stacked.push(layerType);
+            playSound('click');
+
+            document.getElementById('s2-layer-count').innerText = `${s2.stacked.length} / 4`;
+
+            if (s2.stacked.length === 4) {
+                const pourBtn = document.getElementById('s2-pour-btn');
+                pourBtn.disabled = false;
+                pourBtn.className = 'pulsing-btn anime-btn flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-extrabold text-xl py-3 rounded-xl shadow-lg';
+            }
+
+            drawStage2Column();
+        }
+
+        function resetFiltrationLab() {
+            s2.stacked = [];
+            initStage2();
+            playSound('click');
+        }
+
+        function drawStage2Column(waterPoured = false) {
+            s2.ctx.clearRect(0, 0, s2.canvas.width, s2.canvas.height);
+
+            // Draw Column Container
+            s2.ctx.strokeStyle = '#38bdf8';
+            s2.ctx.lineWidth = 4;
+            s2.ctx.fillStyle = 'rgba(15, 23, 42, 0.8)';
+            s2.ctx.fillRect(70, 30, 140, 240);
+            s2.ctx.strokeRect(70, 30, 140, 240);
+
+            // Draw Funnel Outlet at bottom
+            s2.ctx.beginPath();
+            s2.ctx.moveTo(100, 270);
+            s2.ctx.lineTo(140, 300);
+            s2.ctx.lineTo(180, 270);
+            s2.ctx.stroke();
+
+            // Draw stacked layers from bottom up
+            const layerColors = {
+                paper: '#60a5fa',
+                charcoal: '#334155',
+                sand: '#eab308',
+                gravel: '#78350f'
+            };
+
+            const layerLabels = {
+                paper: 'Filter Paper',
+                charcoal: 'Charcoal',
+                sand: 'Sand',
+                gravel: 'Gravel'
+            };
+
+            const layerHeight = 50;
+            s2.stacked.forEach((layer, idx) => {
+                const yPos = 270 - (idx + 1) * layerHeight;
+                s2.ctx.fillStyle = layerColors[layer];
+                s2.ctx.fillRect(74, yPos, 132, layerHeight - 4);
+
+                s2.ctx.fillStyle = '#ffffff';
+                s2.ctx.font = 'bold 15px Inter';
+                s2.ctx.textAlign = 'center';
+                s2.ctx.fillText(layerLabels[layer], 140, yPos + layerHeight / 2 + 4);
+            });
+
+            if (waterPoured) {
+                // Draw water stream flowing through
+                s2.ctx.fillStyle = 'rgba(56, 189, 248, 0.8)';
+                s2.ctx.fillRect(135, 270, 10, 40);
+            }
+        }
+
+        function testFiltrationColumn() {
+            playSound('splash');
+            drawStage2Column(true);
+            document.getElementById('s2-status-text').innerText = "✨ Muddy water purified into crystal clear water!";
+            setTimeout(() => {
+                showVictoryModal(2, 3, "Filtration Master! ⭐⭐⭐");
+            }, 1200);
+        }
+
+        /* ================= STAGE 3 LOGIC ================= */
+        let s3 = {
+            explored: [false, false, false, false, false]
+        };
+
+        const hkProcessData = {
+            1: {
+                step: "HK Process Step 1 / 5",
+                title: "1. Preliminary Treatment (Screening & Grit)",
+                icon: "🗑️",
+                desc: "At sewage pumping stations across Hong Kong (such as Wan Chai and North Point), coarse bar screens intercept large floating items like plastics, rags, and twigs. Heavy sand and grit grit settling channels stop machinery from clogging downstream!",
+                mascot: "Aqua-Chan: 'Screening protects huge pumps from breaking down!'",
+                visualSvg: `<div class="text-6xl animate-bounce">🗑️ ➔ ⚙️</div><p class="text-cyan-300 font-bold text-lg mt-2">Coarse Bar Screens catch large debris</p>`
+            },
+            2: {
+                step: "HK Process Step 2 / 5",
+                title: "2. CAPT (Stonecutters Island STW)",
+                icon: "🧪",
+                desc: "Chemically Assisted Primary Treatment (CAPT) at Stonecutters Island Sewage Treatment Works adds ferric chloride coagulant and polymers. Suspended solids clump together rapidly, settling 80%+ of suspended solids in fast sedimentation tanks!",
+                mascot: "Mizu-Boy: 'Stonecutters Island is one of the world's largest CAPT plants!'",
+                visualSvg: `<div class="text-6xl animate-pulse">🧪 ➔ 🪨 ➔ 💧</div><p class="text-cyan-300 font-bold text-lg mt-2">Coagulants quickly drop 80%+ solids to tank bottom</p>`
+            },
+            3: {
+                step: "HK Process Step 3 / 5",
+                title: "3. Secondary Biological Aeration",
+                icon: "🦠",
+                desc: "Facilities like Sha Tin STW and Tai Po STW pump oxygen bubbles into huge aeration tanks. Billions of friendly micro-organisms ('Bacteri-Pets') consume organic pollutants and dissolved waste naturally!",
+                mascot: "Aqua-Chan: 'Friendly microbes eat up dissolved pollution!'",
+                visualSvg: `<div class="text-6xl animate-spin">🫧 🦠 🫧</div><p class="text-teal-300 font-bold text-lg mt-2">Micro-organisms break down organic pollution using oxygen</p>`
+            },
+            4: {
+                step: "HK Process Step 4 / 5",
+                title: "4. Final Clarification & T·PARK Sludge Energy",
+                icon: "⚡",
+                desc: "Water settles in final clarification tanks so clean effluent overflows the top. The remaining sludge is sent to T·PARK in Tuen Mun, where state-of-the-art waste-to-energy incineration produces electricity to power the facility!",
+                mascot: "Mizu-Boy: 'T·PARK converts sewage sludge into green electricity!'",
+                visualSvg: `<div class="text-6xl">🏭 ➔ ⚡</div><p class="text-amber-300 font-bold text-lg mt-2">Sludge becomes renewable energy at T·PARK Tuen Mun!</p>`
+            },
+            5: {
+                step: "HK Process Step 5 / 5",
+                title: "5. UV Disinfection & Outfall Discharge",
+                icon: "☀️",
+                desc: "Before returning water to Victoria Harbour or ocean outfalls, powerful Ultraviolet (UV) light disinfection neutralizes 99.9% of bacteria without adding harmful long-lasting chemicals, preserving Victoria Harbour's ecosystem!",
+                mascot: "Aqua-Chan & Mizu-Boy: 'Victoria Harbour stays clean and vibrant!'",
+                visualSvg: `<div class="text-6xl animate-pulse">☀️ ➔ 🌊</div><p class="text-blue-300 font-bold text-lg mt-2">UV Light disinfects clean water before marine outfall release</p>`
+            }
+        };
+
+        function initStage3() {
+            s3.explored = [false, false, false, false, false];
+            updateStage3Tracker();
+        }
+
+        function updateStage3Tracker() {
+            const count = s3.explored.filter(Boolean).length;
+            document.getElementById('s3-explored-count').innerText = count;
+
+            for (let i = 1; i <= 5; i++) {
+                const node = document.getElementById(`node-${i}`);
+                const badge = document.getElementById(`badge-node-${i}`);
+                if (s3.explored[i - 1]) {
+                    node.className = "process-node anime-card p-4 border-2 border-emerald-400 bg-emerald-950/80 flex flex-col justify-between items-center text-center rounded-2xl node-completed";
+                    badge.className = "bg-emerald-500/30 text-emerald-300 text-xs px-2.5 py-1 rounded-full border border-emerald-400 font-bold mb-2";
+                    badge.innerText = "Explored ✓";
+                } else {
+                    node.className = "process-node anime-card p-4 border-2 border-indigo-400/60 bg-slate-900 flex flex-col justify-between items-center text-center rounded-2xl hover:border-indigo-300";
+                    badge.className = "bg-slate-800 text-slate-300 text-xs px-2.5 py-1 rounded-full border border-slate-600 font-bold mb-2";
+                    badge.innerText = "Unwatched ⭕";
+                }
+            }
+
+            // CHECK 3 STAR CELEBRATION CONDITION
+            if (count === 5) {
+                document.getElementById('s3-hint-text').innerText = "🎉 All 5 HK Wastewater Processes Explored! 3 Stars Unlocked!";
+                document.getElementById('s3-next-stage-btn').classList.remove('hidden');
+                
+                // Trigger 3 Stars Celebration
+                setTimeout(() => {
+                    showVictoryModal(3, 3, "HK Wastewater Explorer Mastered! ⭐⭐⭐");
+                }, 500);
+            }
+        }
+
+        function openProcessModal(stepNum) {
+            playSound('click');
+            const data = hkProcessData[stepNum];
+
+            document.getElementById('s3-modal-step').innerText = data.step;
+            document.getElementById('s3-modal-title').innerText = data.title;
+            document.getElementById('s3-modal-icon').innerText = data.icon;
+            document.getElementById('s3-modal-visual').innerHTML = data.visualSvg;
+            document.getElementById('s3-modal-desc').innerText = data.desc;
+            document.getElementById('s3-modal-mascot').innerHTML = data.mascot;
+
+            s3.explored[stepNum - 1] = true;
+            document.getElementById('s3-process-modal').classList.remove('hidden');
+        }
+
+        function closeProcessModal() {
+            playSound('click');
+            document.getElementById('s3-process-modal').classList.add('hidden');
+            updateStage3Tracker();
+        }
+
+        /* ================= STAGE 4 LOGIC ================= */
+        let s4 = {
+            currentQ: 0,
+            bossHp: 100,
+            questions: [
+                {
+                    q: "Which facility handles Chemically Assisted Primary Treatment (CAPT) in Hong Kong?",
+                    opts: ["Stonecutters Island STW", "Ocean Park Hydro Slide", "Victoria Park Pool", "Lamma Island Windmill"],
+                    ans: 0
+                },
+                {
+                    q: "What does T·PARK in Tuen Mun convert sewage sludge into?",
+                    opts: ["Green Electricity Energy", "Plastic Bottles", "Chemical Fertilizer", "Car Fuel"],
+                    ans: 0
+                },
+                {
+                    q: "Why is UV light used in disinfection before ocean outfall discharge?",
+                    opts: ["Kills bacteria without chemicals", "Turns water pink", "Warms up ocean water", "Makes water sparkling sweet"],
+                    ans: 0
+                }
+            ]
+        };
+
+        function initStage4() {
+            s4.currentQ = 0;
+            s4.bossHp = 100;
+            updateBossUI();
+            loadQuizQuestion();
+        }
+
+        function updateBossUI() {
+            document.getElementById('boss-hp-text').innerText = `${s4.bossHp}%`;
+            document.getElementById('boss-hp-bar').style.width = `${s4.bossHp}%`;
+        }
+
+        function loadQuizQuestion() {
+            const qData = s4.questions[s4.currentQ];
+            document.getElementById('quiz-num').innerText = s4.currentQ + 1;
+            document.getElementById('quiz-question').innerText = qData.q;
+
+            const optsContainer = document.getElementById('quiz-options');
+            optsContainer.innerHTML = '';
+
+            qData.opts.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'anime-btn bg-slate-800 hover:bg-indigo-900/80 border-2 border-indigo-400/60 p-4 rounded-xl text-left text-white text-xl font-bold transition-all';
+                btn.innerText = `${['A', 'B', 'C', 'D'][idx]}. ${opt}`;
+                btn.onclick = () => handleQuizAnswer(idx);
+                optsContainer.appendChild(btn);
+            });
+        }
+
+        function handleQuizAnswer(selectedIdx) {
+            const qData = s4.questions[s4.currentQ];
+            if (selectedIdx === qData.ans) {
+                playSound('star');
+                s4.bossHp = Math.max(0, s4.bossHp - 34);
+                updateBossUI();
+
+                // Animate Kraken hit
+                const kraken = document.getElementById('kraken-sprite');
+                kraken.className = "text-8xl md:text-9xl transition-all duration-300 filter drop-shadow-[0_0_20px_rgba(239,68,68,0.9)] scale-90 opacity-75";
+                setTimeout(() => {
+                    kraken.className = "text-8xl md:text-9xl transition-all duration-300 filter drop-shadow-[0_0_20px_rgba(168,85,247,0.7)] scale-100 opacity-100";
+                }, 300);
+
+                if (s4.bossHp <= 0) {
+                    setTimeout(() => {
+                        showVictoryModal(4, 3, "Dark Sludge Kraken Defeated! ⭐⭐⭐");
+                    }, 600);
+                } else {
+                    s4.currentQ++;
+                    loadQuizQuestion();
+                }
+            } else {
+                playSound('freeze');
+                alert("Aqua-Chan: 'Not quite! Think about Hong Kong's clean water processes and try again!'");
+            }
+        }
+
+        // Initialize display on load
+        window.onload = function() {
+            updateStatsUI();
+        };
+    </script>
+</body>
+</html>
